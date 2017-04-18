@@ -6,6 +6,11 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
+                    <div class="pull-left">
+                        <form action="{{ URL::previous() }}" method="GET">{{ csrf_field() }}
+                            <button type="submit" id="create-resident" class="btn btn-primary"><i class="fa fa-btn fa-file-o"></i>Back</button>
+                        </form>
+                    </div>
                     <div class="panel-heading text-center" > Create New Center</div>
                     <div class="panel-body">
 
@@ -21,14 +26,16 @@
 
                         {!! Form::open(['url' => 'center']) !!}
                         <div class="form-group">
-                            {!! Form::label('cntr_name', '*Center Name:',['class' => 'col-md-4 control-label']) !!}
+                            <span style="color: red; display:block; float:left">*</span>
+                            {!! Form::label('cntr_name', 'Center Name:',['class' => 'col-md-4 control-label']) !!}
                             <div class="col-md-4">
                                 {!! Form::text('cntr_name',null,['class' => 'col-md-4 form-control','required' => 'required']) !!}
                             </div>
                         </div>
                         </br> </br>
+                            <span style="color: red; display:block; float:left">*</span>
                         <div class="form-group">
-                            {!! Form::label('cntr_add1', '*Center Address1:',['class' => 'col-md-4 control-label']) !!}
+                            {!! Form::label('cntr_add1', 'Center Address1:',['class' => 'col-md-4 control-label']) !!}
                             <div class="col-md-4">
                                 {!! Form::text('cntr_add1',null,['class' => 'col-md-4 form-control','required' => 'required']) !!}
                             </div>
@@ -41,22 +48,25 @@
                             </div>
                         </div>
                         </br> </br>
+                            <span style="color: red; display:block; float:left">*</span>
                         <div class="form-group">
-                            {!!Form::label('cntr_city', '*Center City:',['class' => 'col-md-4 control-label']) !!}
+                            {!!Form::label('cntr_city', 'Center City:',['class' => 'col-md-4 control-label']) !!}
                             <div class="col-md-4">
                                 {!! Form::text('cntr_city',null,['class'=>'col-md-4 form-control','required' => 'required']) !!}
                             </div>
                         </div>
                         </br> </br>
+                            <span style="color: red; display:block; float:left">*</span>
                             <div class="form-group">
-                                {!!Form::label('cntr_state', '*Center State:',['class' => 'col-md-4 control-label']) !!}
+                                {!!Form::label('cntr_state', 'Center State:',['class' => 'col-md-4 control-label']) !!}
                                 <div class="col-md-4">
                                     {!! Form::text('cntr_state',null,['class'=>'col-md-4 form-control','required' => 'required']) !!}
                                 </div>
                             </div>
                             </br> </br>
+                            <span style="color: red; display:block; float:left">*</span>
                             <div class="form-group">
-                                {!!Form::label('cntr_zip', '*Center Zip:',['class' => 'col-md-4 control-label']) !!}
+                                {!!Form::label('cntr_zip', 'Center Zip:',['class' => 'col-md-4 control-label']) !!}
                                 <div class="col-md-4">
                                     {!! Form::text('cntr_zip',null,['class'=>'col-md-4 form-control','required' => 'required']) !!}
                                 </div>

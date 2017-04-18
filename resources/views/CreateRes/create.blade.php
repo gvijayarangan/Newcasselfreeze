@@ -1,11 +1,23 @@
 @extends('layouts.app')
+<head xmlns="http://www.w3.org/1999/html">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  @section('content') 
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+</head>
+@section('content')
 
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
+                <div class="pull-left">
+                    <form action="{{ URL::previous() }}" method="GET">{{ csrf_field() }}
+                        <button type="submit" id="create-resident" class="btn btn-primary"><i class="fa fa-btn fa-file-o"></i>Back</button>
+                    </form>
+                </div>
                 <div class="panel-heading text-center"> Create New Resident</div>
                 <div class="panel-body">
                     @if (count($errors) > 0)
@@ -18,11 +30,12 @@
                         </div>
                     @endif
 
-                    {!! Form::open(['url' => 'resident']) !!}  
-                    <input type="hidden" name="_token" value="{{ Session::token() }}"> 
-                     
+                    {!! Form::open(['url' => 'resident']) !!}
+                    <input type="hidden" name="_token" value="{{ Session::token() }}">
+                    
                     <div class="form-group">
-                        {!! Form::label('res_pccid', '*PCCID:',['class' => 'col-md-4 control-label']) !!}
+                        <span style="color: red; display:block; float:left">*</span>
+                        {!! Form::label('res_pccid', 'PCCID:',['class' => 'col-md-4 control-label']) !!}
                         <div class="col-md-4">
                             {!! Form::text('res_pccid',null,['class'=>'form-control','required' => 'required']) !!}
                         </div>
@@ -31,7 +44,8 @@
                     </br> </br>
 
                     <div class="form-group">
-                        {!! Form::label('res_fname', '*First Name:',['class' => 'col-md-4 control-label']) !!}
+                        <span style="color: red; display:block; float:left">*</span>
+                        {!! Form::label('res_fname', 'First Name:',['class' => 'col-md-4 control-label']) !!}
                         <div class="col-md-4">
                             {!! Form::text('res_fname',null,['class'=>'form-control','required' => 'required']) !!}
                         </div>
@@ -49,7 +63,8 @@
                     </br> </br>
 
                     <div class="form-group">
-                        {!! Form::label('res_lname', '*Last Name:',['class' => 'col-md-4 control-label']) !!}
+                        <span style="color: red; display:block; float:left">*</span>
+                        {!! Form::label('res_lname', 'Last Name:',['class' => 'col-md-4 control-label']) !!}
                         <div class="col-md-4">
                             {!! Form::text('res_lname',null,['class'=>'form-control','required' => 'required']) !!}
                         </div>
@@ -58,11 +73,12 @@
                     </br> </br>
 
                     <div class="form-group">
-                        {!! Form::Label('res_gender', '*Gender:',['class' => 'col-md-4 control-label']) !!}
+                        <span style="color: red; display:block; float:left">*</span>
+                        {!! Form::Label('res_gender', 'Gender:',['class' => 'col-md-4 control-label']) !!}
                         <div class="col-md-4">
                             {{ Form::select('res_gender', [
-                                'Female' => 'Female',
-                                'Male' => 'Male'], old('res_gender'), ['class' => 'form-control']) }}
+                                'Male' => 'Male',
+                                'Female' => 'Female'], old('res_gender'), ['class' => 'form-control']) }}
                         </div>
                     </div>
 
@@ -104,38 +120,43 @@
                     </br> </br>
 
                     <div class="form-group">
-                        {!! Form::Label('res_status', '*Status:',['class' => 'col-md-4 control-label']) !!}
+                        <span style="color: red; display:block; float:left">*</span>
+                        {!! Form::Label('res_status', 'Status:',['class' => 'col-md-4 control-label']) !!}
                         <div class="col-md-4">
                             {!! Form::select('res_status', [
-                                        'Inactive' => 'Inactive',
-                                        'Active' => 'Active'], old('res_status'), ['class' => 'form-control']) !!}
+                                        'Active' => 'Active',
+                                        'Inactive' => 'Inactive'], old('res_status'), ['class' => 'form-control']) !!}
                         </div>
                     </div>
 
                     <br><br>
 
                     <div class="form-group">
-                          {!! Form::label('cntr_name', 'Center Name:', ['class' => 'col-md-4 control-label']) !!} 
-                        <div class="col-md-6"> 
-                            {{ Form::select('cntr_name', array_merge([0 => 'Please Select']) + $centers, 'default',
-                               array('id' => 'center_drop', 'class' => 'col-md-4')) }}
-                        </div> 
-                    </div>
-                     
-
-                    <div class="form-group">
-                           {!! Form::label('apt_number', 'Apartment Number:', ['class' => 'col-md-4 control-label']) !!}
+                        <span style="color: red; display:block; float:left">*</span> {!! Form::label('cntr_name', 'Center Name:', ['class' => 'col-md-4 control-label']) !!}
                         <div class="col-md-6">
-                            {{ Form::select('apt_number', array_merge([0 => 'Please Select']), 'default',
-                                array('id' => 'apartment_drop', 'class' => 'col-md-4')) }} 
+                            {{ Form::select('cntr_name', array_merge([0 => 'Select']) + $centers, 'default',
+                               array('id' => 'center_drop', 'class' => 'col-md-4')) }}
                         </div>
                     </div>
+
+                    <br><br>
+
+                    <div class="form-group">
+                        <span style="color: red; display:block; float:left">*</span>
+                         {!! Form::label('apt_number', 'Apartment Number:', ['class' => 'col-md-4 control-label']) !!}
+                        <div class="col-md-6">
+                            {{ Form::select('apt_number', array_merge([0 => 'Select']), 'default',
+                                array('id' => 'apartment_drop', 'class' => 'col-md-4')) }}
+                        </div>
+                    </div>
+
+                        <br><br>
 
                     <div class="form-group" style="text-align: center">
                         {!! Form::submit('Save', ['class' => 'btn btn-primary form-control']) !!}
                     </div>
 
-                      {!! Form::close() !!}
+                    {!! Form::close() !!}
                 </div>
             </div>
         </div>

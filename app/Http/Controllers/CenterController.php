@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 use App\Center;
+use App\Comarea;
+use App\Resident;
+use App\Apartment;
 use Illuminate\Http\Request;
+use DB;
 
 
 
@@ -17,6 +21,20 @@ class CenterController extends Controller
         return view('CreateCntr.index', compact('createcntrs'));
     }
 
+//    public function search(Request $request)
+//    {
+//
+//        $query = trim($request->get('q'));
+//        #dd(!$query);
+//        $createcntrs = $query
+//            //? \App\Apartment::where('apt_number', 'LIKE', "%$query%")->get()
+//            ? DB::table('centers')
+//                ->where('cntr_name', '=', $query)->get()
+//
+//            : \App\Center::all();
+//        return view('CreateCntr.index', compact('createcntrs'));
+//
+//    }
     public function show($id)
     {
         $post = Center::find($id);
@@ -37,13 +55,13 @@ class CenterController extends Controller
     public function store(Request $request)
     {//dd($request);
         $this->validate($request, [
-            'cntr_name' => 'required|string|Max:50',
-            'cntr_add1' => 'required|string|Max:50',
-            'cntr_city' => 'required|string|Max:50',
+            'cntr_name' => 'required|string|Max:20',
+            'cntr_add1' => 'required|string|Max:30',
+            'cntr_city' => 'required|string|Max:20',
             'cntr_state' => 'required|string|Max:20',
             'cntr_zip' => 'required|string|digits:5',
-            'cntr_phone' => 'string|digits:10',
-            'cntr_fax' => 'string|digits:10',
+            'cntr_phone' => 'numeric|digits:10|min:0',
+            'cntr_fax' => 'numeric|digits:10|min:0',
         ]);
         $center = new Center();
         $center->cntr_name = $request->cntr_name;
@@ -82,13 +100,13 @@ class CenterController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'cntr_name' => 'required|string|Max:50',
-            'cntr_add1' => 'required|string|Max:50',
-            'cntr_city' => 'required|string|Max:50',
+            'cntr_name' => 'required|string|Max:20',
+            'cntr_add1' => 'required|string|Max:30',
+            'cntr_city' => 'required|string|Max:20',
             'cntr_state' => 'required|string|Max:20',
             'cntr_zip' => 'required|string|digits:5',
-            'cntr_phone' => 'string|digits:10',
-            'cntr_fax' => 'string|digits:10',
+            'cntr_phone' => 'numeric|digits:10|min:0',
+            'cntr_fax' => 'numeric|digits:10|min:0',
         ]);
 
         $UpdateCntr = Center::find($id);
@@ -104,7 +122,6 @@ class CenterController extends Controller
         $UpdateCntr->save();
         return redirect('center');
     }
-
     /**
      *
      *
@@ -113,7 +130,20 @@ class CenterController extends Controller
      */
     public function destroy($id)
     {
-        Center::find($id)->delete();
+        try {
+            /*DB::connection()->pdo->beginTransaction();*/
+
+            //Delete all comarea for Center
+            $comarea = Comarea::where('cntr_id', '=', $id)->delete();
+            $apartment = Apartment::where('cntr_id', '=', $id)->delete();
+            $resident = Resident::where('res_cntr_id', '=', $id)->delete();
+            $center = Center::where('id', '=', $id)->delete();
+
+        }catch(Exception $e) {
+            /*DB::connection()->pdo->rollBack();*/
+            Log::exception($e);
+        }
+        //Center::find($id)->delete();
         return redirect('center');
     }
 

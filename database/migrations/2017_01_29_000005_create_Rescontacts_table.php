@@ -19,15 +19,18 @@ class CreateResContactsTable extends Migration
             $table->string('con_mname')->nullable();
             $table->string('con_lname');
             $table->string('con_relationship');
-            $table->string('con_cellphone');
-            $table->string('con_email');
+            $table->string('con_cellphone')->nullable();
+            $table->string('con_email')->nullable();
             $table->string('con_comment')->nullable();
             $table->string('con_gender');
-            $table->integer('con_res_id');
+
+//            $table->integer('con_res_id')->unsigned();;
+
+
+//       $table->foreign('con_res_id')->references('id')->on('residents')->onDelete('cascade');
           
         });
 
-   
     }
 
     /**

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Center;
 use App\Comarea;
 use Illuminate\Http\Request;
+use DB;
 //use App\AppServiceProvider;
 //use App\Illuminate\Support\Facades\Validator;
 
@@ -19,9 +20,26 @@ class CommonareaController extends Controller
 
         return view('CreateComarea.index',compact('createcomarea'));
     }
+//    public function search(Request $request)
+//    {
+//
+//        $query = trim($request->get('q'));
+//        #dd($query);
+//        $createcomarea = $query
+//            //? \App\Apartment::where('apt_number', 'LIKE', "%$query%")->get()
+//            ? DB::table('comareas')
+//                ->where('ca_name', '=', $query)->get()
+//            : \App\Comareas::all();
+//        foreach ($createcomarea as $ca) {
+//            $ca -> cntr_id = Center::findOrFail($ca -> cntr_id)->cntr_name;
+//        }
+//
+//        return view('CreateComarea.index',compact('createcomarea'));
+//    }
     public function show($id)
     {
         $post = Comarea::find($id);
+        $post->cntr_id = DB::table('centers')->where('id', $post->cntr_id)->value('cntr_name');
         return view('CreateComarea.show', compact('post'));
     }
 

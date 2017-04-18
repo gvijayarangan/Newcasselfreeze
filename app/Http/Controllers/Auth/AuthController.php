@@ -36,7 +36,7 @@ class AuthController extends Controller
      */
     protected $redirectTo = '/';
     protected $redirectPath = '/home';
-    protected $loginPath = '/login';
+    protected $loginPath = '/';
 
     /**
      * Create a new authentication controller instance.
@@ -60,11 +60,17 @@ class AuthController extends Controller
             'f_name' => 'required|max:255',
             'l_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
+            'password'   => array(
+                'required',
+                'min:6',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
+                'confirmed'),
             'cell' => 'required|min:10|max:10',
             'role' => 'required',
         ]);
     }
+    protected $maxLoginAttempts = 5; // Amount of bad attempts user can make
+    protected $lockoutTime = 300; // Time for which user is going to be blocked in seconds
 
     /**
      * Create a new user instance after a valid registration.
@@ -90,6 +96,11 @@ class AuthController extends Controller
 
     }
 
+    public function checkSession()
+    {
+        return Response::json(['guest' => Auth::guest()]);
+        $this->middleware('guest', ['except' => ['logout', 'checkSession']]);
+    }
     // Todo: should probably implemeent a trait ChangePassword
     /**
      * Updates the password for the current user.
@@ -107,8 +118,17 @@ class AuthController extends Controller
             $user = Auth::user();
             $rules = array(
                 'old_password' => 'required',
-                'password' => 'required|different:old_password|confirmed|min:6',
-                'password_confirmation' => 'required|min:6'
+                'password' => array(
+                    'required',
+                    'different:old_password',
+                    'min:8',
+                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
+                    'confirmed'),
+
+                'password_confirmation' => array(
+                    'required',
+                    'min:8',
+                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/'),
             );
 
             $passwordOInput = Input::get('old_password');

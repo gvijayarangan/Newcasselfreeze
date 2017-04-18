@@ -1,11 +1,15 @@
-@include('layouts.app')
-@extends('CreateApt')
+@extends('layouts.app')
 @section('content')
     <link href="{!! asset('css/all.css') !!}" media="all" rel="stylesheet" type="text/css" />
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
+                    <div class="pull-left">
+                        <form action="{{ URL::previous() }}" method="GET">{{ csrf_field() }}
+                            <button type="submit" id="edit-resident" class="btn btn-primary"><i class="fa fa-btn fa-file-o"></i>Back</button>
+                        </form>
+                    </div>
                     <div class="panel-heading text-center" > Apartment Information</div>
                     <div class="panel-body">
 
@@ -15,6 +19,10 @@
             <tbody>
             <tr class="bg-info">
 
+            <tr>
+                <td>Center Name:</td>
+                <td><?php echo ($post['cntr_id']); ?></td>
+            </tr>
             <tr>
                 <td>Apartment Floor Number:</td>
                 <td><?php echo ($post['apt_floornumber']); ?></td>
@@ -26,10 +34,6 @@
             <tr>
                 <td>Apartment Comments:</td>
                 <td><?php echo ($post['apt_comments']); ?></td>
-            </tr>
-            <tr>
-                <td>Center Name:</td>
-                <td><?php echo ($post['cntr_id']); ?></td>
             </tr>
             </tbody>
         </table>

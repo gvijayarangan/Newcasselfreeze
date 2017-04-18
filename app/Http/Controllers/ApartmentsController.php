@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 
 use App\Apartment;
 use App\Center;
+use App\Resident;
+use App\Aptresi;
 use DB;
 
 //adding comment for demo1
@@ -14,10 +16,12 @@ class ApartmentsController extends Controller
     public function index()
     {
         $createapts = Apartment::all();
+        #dd($createapts);
         foreach ($createapts as $apts) {
             $apts->centerName = Center::findOrFail($apts->cntr_id)->cntr_name;
         }
         return view('CreateApt.index',compact('createapts'));
+//          return view::make('CreateApt.index',compact('createapts'),);
     }
 
     public function show($id)
@@ -41,7 +45,7 @@ class ApartmentsController extends Controller
     public function store(Request $request)
     {//dd($request);
         $this->validate($request, [
-            'apt_floornumber' => 'required|string|digits_between:1,3 ',
+            'apt_floornumber' => 'required|numeric|digits_between:1,3|min:0',
             'apt_number' => 'required|string|digits_between:1,4',
         ]);
         $apartment = new Apartment();
@@ -77,7 +81,7 @@ class ApartmentsController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'apt_floornumber' => 'required|string|digits:3',
+            'apt_floornumber' => 'required|numeric|digits_between:1,3|min:0 ',
             'apt_number' => 'required|string|digits:3',
         ]);
 
@@ -98,7 +102,37 @@ class ApartmentsController extends Controller
      */
     public function destroy($id)
     {
-        Apartment::find($id)->delete();
+        try {
+            /*DB::connection()->pdo->beginTransaction();*/
+
+            //Delete all comarea for Center
+            $aptresi = Aptresi::where('apt_id', '=', $id)->delete();
+            $resident = Resident::where('res_apt_id', '=', $id)->delete();
+            $apartment = Apartment::where('id', '=', $id)->delete();
+
+        }catch(Exception $e) {
+            /*DB::connection()->pdo->rollBack();*/
+            Log::exception($e);
+        }
         return redirect('apartment');
     }
+
+//    public function search(Request $request)
+//    {
+//
+//        $query = trim($request->get('q'));
+//        #dd(!$query);
+//        $createapts = $query
+//                //? \App\Apartment::where('apt_number', 'LIKE', "%$query%")->get()
+//                ? DB::table('apartments')
+//                  ->where('apt_number', '=', $query)->get()
+//
+//                : \App\Apartment::all();
+//        foreach ($createapts as $apts) {
+//            $apts->centerName = Center::findOrFail($apts->cntr_id)->cntr_name;
+//        }
+//        return view('CreateApt.index',compact('createapts'));
+//        //dd($apartments);
+//
+//    }
 }

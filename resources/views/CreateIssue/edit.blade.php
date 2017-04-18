@@ -1,11 +1,15 @@
-@include('layouts.app')
-@extends('CreateIssue')
+@extends('layouts.app')
 @section('content')
     <link href="{!! asset('css/all.css') !!}" media="all" rel="stylesheet" type="text/css" />
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
+                    <div class="pull-left">
+                        <form action="{{ URL::previous() }}" method="GET">{{ csrf_field() }}
+                            <button type="submit" id="edit-resident" class="btn btn-primary"><i class="fa fa-btn fa-file-o"></i>Back</button>
+                        </form>
+                    </div>
                     <div class="panel-heading text-center" > Update Issue Type Information</div>
                     <div class="panel-body">
     @if (count($errors) > 0)
@@ -19,6 +23,7 @@
     @endif
     {!! Form::model($issue, ['method' => 'PATCH','route'=>['issuetype.update', $issue->id]]) !!}
     <div class="form-group">
+        <span style="color: red; display:block; float:left">*</span>
         {!! Form::label('issue_typename', 'Issue Type Name:') !!}
         {!! Form::text('issue_typename',null,['class'=>'form-control']) !!}
     </div>

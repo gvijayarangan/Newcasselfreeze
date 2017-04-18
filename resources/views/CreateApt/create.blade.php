@@ -1,11 +1,15 @@
-@include('layouts.app')
-@extends('CreateApt')
+@extends('layouts.app')
 @section('content')
     <link href="{!! asset('css/all.css') !!}" media="all" rel="stylesheet" type="text/css"/>
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
+                    <div class="pull-left">
+                        <form action="{{ URL::previous() }}" method="GET">{{ csrf_field() }}
+                            <button type="submit" id="create-resident" class="btn btn-primary"><i class="fa fa-btn fa-file-o"></i>Back</button>
+                        </form>
+                    </div>
                     <div class="panel-heading text-center"> Create Apartment Information</div>
                     <div class="panel-body">
 
@@ -20,35 +24,33 @@
                             </div>
                         @endif
                         {!! Form::open(['url' => 'apartment']) !!}
+                        <span style="color: red; display:block; float:left">*</span>
                         <div class="form-group">
-                            {!! Form::label('apt_floornumber', '*Apartment Floor Number:',['class' => 'col-md-4 control-label']) !!}
+                            {!! Form::label('cntr_name', 'Center Name:',['class' => 'col-md-4 control-label']) !!}
+                            <div class="col-md-4">
+                                {!! Form::select('cntr_name', $centers ,null,['placeholder' => 'Please select','class' => 'col-md-4 form-control','required' => 'required']) !!}
+                            </div>
+                            </br> </br>
+                            <span style="color: red; display:block; float:left">*</span>
+                            {!! Form::label('apt_floornumber', 'Apartment Floor Number:',['class' => 'col-md-4 control-label']) !!}
                             <div class="col-md-4">
                                 {!! Form::text('apt_floornumber',null,['class' => 'col-md-4 form-control','required' => 'required']) !!}
                             </div>
                             </br> </br>
 
+                            <span style="color: red; display:block; float:left">*</span>
                             <div class="form-group">
-                                {!! Form::label('apt_number', '*Apartment Number:',['class' => 'col-md-4 control-label']) !!}
+                                {!! Form::label('apt_number', 'Apartment Number:',['class' => 'col-md-4 control-label']) !!}
                                 <div class="col-md-4">
                                     {!! Form::text('apt_number',null,['class' => 'col-md-4 form-control','required' => 'required']) !!}
                                 </div>
                                 </br> </br>
-
-
                                 <div class="form-group">
-                                    {!! Form::label('cntr_name', '*Center Name:',['class' => 'col-md-4 control-label']) !!}
-                                    <div class="col-md-4">
-                                        {!! Form::select('cntr_name', $centers ,null,['class' => 'col-md-4 form-control','required' => 'required']) !!}
-                                    </div>
-                                    </br> </br>
-
                                     <div class="form-group">
                                         {!! Form::label('apt_comments', 'Apartment Comments:',['class' => 'col-md-4 control-label']) !!}
                                         <div class="col-md-4">
                                             {!! Form::textarea('apt_comments',null,['class' => 'col-md-4 form-control','rows' => 4, 'cols' => 60]) !!}
                                         </div>
-
-
                                     </div>
                                     </br> </br>
                                     <div class="form-group" style="text-align: center; padding-top: 100px">
@@ -62,4 +64,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 @stop
